@@ -1,0 +1,37 @@
+{% extends base.html %}
+{% block content %}
+<h2>Welcome, {{ request.user.username }}</h2>
+
+<h3>Currently Borrowed Books</h3>
+<ul>
+    {% for txn in active_borrows %}
+    <li>
+        {{ txn.book_copy.book.title }} - due:{{ txn.due_date }}
+        {% txn.due_date <= today %}
+            <strong style="color:red; ">Overdue</strong>
+        {%endif%}
+        {% if txn.fine_amount >0 %}
+        | Fine: Rs.{{ txn.fine_amount }}
+        {% endif %}
+    </li>
+    {% empty %}
+    <li>No Borrowed Books.</li>
+    {% endfor %}
+</ul>
+
+<h3>Your Reservations</h3>
+<ul>
+    {% for res in reservations%}
+    <li>
+        {{ res.book.title }} - {{ res.status }}
+        {% if res.status== "ACTIVE" %}
+            (Placed on res.reserved_at)
+        {% elif res.status == "FULFILLED" %}
+            (Fulfilled on {{ res.updated_at|res.reserved_at }})
+        {% endif %}
+    </li>
+    {% empty %}
+    <li>No Reservations.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% for copy in book.bookcopy_set.all %}
+    <p>Copy  ID: {{ copy.id }} | Status: {{ copy.status }}</p>
+    {% if copy.status == "AVAILABLE" %}
+        <a href="{% url 'core:borrow_book' copy.id%}">Borrow</a>
+    {% elif copy.status == "BORROWED"%}
+        {% if copy.borrowtransaction_set.last.user == request.user %}
+            <a href="{% url 'core:return_book' copy.id%}">Return</a>
+        {% endif %}
+    {% endif %}
+{% endfor %}
+
+{# Reserve link if no copy is available #}
+{% if book.available_copies == 0 %}
+    <a href="{% url 'core:reserve_book' book.id %}">Reserve this book</a>
+{% endif %}
