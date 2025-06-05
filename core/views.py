@@ -86,4 +86,17 @@ def book_list_view(request):
     }
     return render(request,"core/book_list.html",context)
 
+def book_detail_view (request,book_id):
+    book = get_object_or_404(Book,id = book_id)
+    copies = book.book_copy__set.all()
 
+    available_copies = copies.filter(status = "AVAILABLE").count()
+    total_copies = copies.count()
+
+    context = {
+        'book':book,
+        'copies':copies,
+        'available_copies':available_copies,
+        "total_copies":total_copies
+    }
+    return render(request,"core/book_detail.html",context)
