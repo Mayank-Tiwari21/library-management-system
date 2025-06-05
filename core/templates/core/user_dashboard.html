@@ -7,7 +7,7 @@
     {% for txn in active_borrows %}
     <li>
         {{ txn.book_copy.book.title }} - due:{{ txn.due_date }}
-        {% txn.due_date <= today %}
+        {%if txn.due_date <= today %}
             <strong style="color:red; ">Overdue</strong>
         {%endif%}
         {% if txn.fine_amount >0 %}
@@ -25,9 +25,9 @@
     <li>
         {{ res.book.title }} - {{ res.status }}
         {% if res.status== "ACTIVE" %}
-            (Placed on res.reserved_at)
+            (Placed on {{ res.reserved_at }})
         {% elif res.status == "FULFILLED" %}
-            (Fulfilled on {{ res.updated_at|res.reserved_at }})
+            (Fulfilled on {{ res.updated_at|default: res.reserved_at }})
         {% endif %}
     </li>
     {% empty %}
