@@ -15,7 +15,7 @@ def borrow_book_view(request, copy_id):
         messages.success(request,f"You have successfully borrowed {book_copy.book.title}")
     except Exception as e:
         messages.error(request,f"Borrow failed:{str(e)}")
-    return redirect("core/book_detail",book_id=book_copy.book.id)
+    return redirect("core:book_detail",book_id=book_copy.book.id)
 
 
 @login_required
@@ -26,7 +26,7 @@ def return_book_view(request,copy_id):
         messages.success(request,f"Successfully returned {book_copy.book.title}")
     except Exception as e:
         messages.error(request,f"Return failed:{str(e)}")
-    return redirect("core/book_detail",book_id = book_copy.book.id)
+    return redirect("core:book_detail",book_id = book_copy.book.id)
 
 @login_required
 def reserve_book_view(request, book_id):
@@ -36,19 +36,19 @@ def reserve_book_view(request, book_id):
     existing = Reservation.objects.get(user = request.user, book = book , status = 'ACTIVE').exists()
     if existing:
         messages.warning(request,"You already have an active reservation for this book.")
-        return redirect("core/book_detail",book_id = book_id)
+        return redirect("core:book_detail",book_id = book_id)
 
     #check if any available copies exist
     if book.available_copies> 0:
         messages.info(request, "Book is currently available. You can borrow it instead of reserving.")
-        return redirect("core/book_detail", book_id = book_id)
+        return redirect("core:book_detail", book_id = book_id)
     # create reservation
     Reservation.objects.create(
         user = request.user,
         book = book
     )
     messages.success(request,"Reservation placed successfully")
-    return redirect("core/book_detail",book_id = book_id)
+    return redirect("core:book_detail",book_id = book_id)
 @login_required
 def user_dashboard_view(request):
     #current active borrowings
@@ -68,7 +68,7 @@ def user_dashboard_view(request):
         'today':today
     }
 
-    return render(request,'core/user_dashboard.html.html',context)
+    return render(request,'core/user_dashboard.html',context)
 
 def book_list_view(request):
     query = request.GET.get('q','')
