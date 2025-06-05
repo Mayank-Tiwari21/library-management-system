@@ -9,18 +9,35 @@
 <p><strong>Available Copies:</strong> {{ available_copies }} / {{ total_copies }}</p>
 
 {% if user.is_authenticated %}
-  {% if available_copies > 0 %}
-    <form method="post" action="{% url 'borrow_book' book.id %}">
+  <h3>Copies</h3>
+  {% for copy in book.bookcopy_set.all %}
+    <p>Copy ID: {{ copy.id }} | Status: {{ copy.status }}</p>
+    {% if copy.status == "AVAILABLE" %}
+      <form method="post" action="{% url 'core:borrow_book' copy.id %}">
+        {% csrf_token %}
+        <button type="submit">Borrow this Copy</button>
+      </form>
+    {% elif copy.status == "BORROWED" %}
+      {% if copy.borrowtransaction_set.last.user == request.user %}
+        <form method="post" action="{% url 'core:return_book' copy.id %}">
+          {% csrf_token %}
+          <button type="submit">Return</button>
+        </form>
+      {% endif %}
+    {% endif %}
+  {% empty %}
+    <p>No copies found for this book.</p>
+  {% endfor %}
+
+  {% if available_copies == 0 %}
+    <form method="post" action="{% url 'core:reserve_book' book.id %}">
       {% csrf_token %}
-      <button type="submit">Borrow a Copy</button>
-    </form>
-  {% else %}
-    <form method="post" action="{% url 'reserve_book' book.id %}">
-      {% csrf_token %}
-      <button type="submit">Reserve</button>
+      <button type="submit">Reserve this Book</button>
     </form>
   {% endif %}
+
 {% else %}
   <p><a href="{% url 'login' %}">Log in</a> to borrow or reserve this book.</p>
 {% endif %}
+
 {% endblock %}
