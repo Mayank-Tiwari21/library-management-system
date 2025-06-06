@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.contrib import messages
 from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
-
+from .forms import ProfileEditForm
 # Create your views here.
 
 def register_view(request):
@@ -20,4 +20,16 @@ def register_view(request):
 
 @login_required
 def profile_view(request):
-    return render (request,"users:profile.html",{'user':request.user})
+    return render (request,"users/profile.html",{'user':request.user})
+
+@login_required
+def edit_profile_view(request):
+    user = request.user
+    if request.method == 'POST':
+        form = ProfileEditForm(request.POST,instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('users:profile')
+    else:
+        form = ProfileEditForm(instance = user)
+    return render(request,'users/edit_profile.html',{'form':form})
