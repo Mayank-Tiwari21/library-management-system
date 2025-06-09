@@ -17,8 +17,8 @@
             <td>{{ book.author }}</td>
             <td>{{ book.copies.count }}</td>
             <td>
-                <a href="{% url 'edit_book' book.id %}">Edit</a>
-                <a href="{% url 'delete_book' book.id %}">Delete</a>
+                <a href="{% url 'core:edit_book' book.id %}">Edit</a>
+                <a href="{% url 'core:delete_book' book.id %}">Delete</a>
             </td>
         </tr>
     {% empty %}
@@ -26,5 +26,5 @@
     {% endfor %}
     </tbody>
 </table>
-<a href = '{% url "add_book" %}'>Add Book</a>
+<a href = '{% url "core:add_book" %}'>Add Book</a>
 {% endblock %}

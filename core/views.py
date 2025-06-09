@@ -5,6 +5,7 @@ from .models import BookCopy ,Book, Reservation, BorrowTransaction
 from .services import borrow_book, return_book
 from  django.utils import timezone
 from django.db.models import Q
+from .forms import BookForm
 # Create your views here.
 
 @login_required
@@ -114,3 +115,13 @@ def is_admin(user):
 def admin_book_list(request):
     books = Book.objects.all().prefetch_related('copies')
     return render(request, 'core/admin/book_list.html', {'books': books})
+
+def add_book(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('core:admin_book_list')
+    else:
+        form = BookForm()
+    return render(request,'core/admin/add_book.html',{"form":form})
