@@ -150,3 +150,16 @@ def book_copies(request,book_id):
     book = get_object_or_404(Book,pk=book_id)
     copies = book.copies.all()
     return render(request,"core/admin/book_copies.html",{'book':book,'copies':copies})
+
+@user_passes_test(is_admin)
+def add_book_copy(request,book_id):
+    book = get_object_or_404(Book,pk = book_id)
+    last_copy = book.copies.order_by('-copy_number').first()
+    new_number = last_copy.copy_number + 1 if last_copy else 1
+
+    BookCopy.objects.create(book = book,copy_number = new_number)
+    book.total_copies +=1
+    book.available_copies +=1
+    book.save()
+
+    return redirect('core:book_copies',book_id = book.id)
