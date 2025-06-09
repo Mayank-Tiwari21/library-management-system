@@ -126,6 +126,7 @@ def add_book(request):
         form = BookForm()
     return render(request,'core/admin/add_book.html',{"form":form})
 
+@user_passes_test(is_admin)
 def edit_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     if request.method == "POST":
@@ -136,3 +137,10 @@ def edit_book(request, book_id):
     else:
         form = BookForm()
     return render(request,'core/admin/edit_book.html',{"form":form,"book":book})
+@user_passes_test(is_admin)
+def delete_book(request, book_id):
+    book = get_object_or_404(Book,pk=book_id)
+    if request.method == "POST":
+        book.delete()
+        return redirect("core:admin_book_list")
+    return render(request,'core/admin/delete_book.html',{'book':book})
