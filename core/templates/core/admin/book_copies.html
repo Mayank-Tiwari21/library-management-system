@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Copies of {{ book.title }}</h2>
+
+<ul>
+    {% for copy in copies %}
+    <li>Copy #{{ copy.copy_number }} - {{ copy.status }}
+        <a href="{% url 'core:delete_book_copy' copy.id %}">Delete</a>
+    </li>
+    {% empty %}
+    <li>No copies found.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'core:add_book_copy' book.id%}">Add New Copy</a>
+{% endblock %}

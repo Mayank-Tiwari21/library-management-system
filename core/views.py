@@ -144,3 +144,9 @@ def delete_book(request, book_id):
         book.delete()
         return redirect("core:admin_book_list")
     return render(request,'core/admin/delete_book.html',{'book':book})
+
+@user_passes_test(is_admin)
+def book_copies(request,book_id):
+    book = get_object_or_404(Book,pk=book_id)
+    copies = book.copies.all()
+    return render(request,"core/admin/book_copies.html",{'book':book,'copies':copies})

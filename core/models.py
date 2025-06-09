@@ -46,7 +46,7 @@ class BookCopy(models.Model):
     ]
     book = models.ForeignKey(Book,on_delete=models.CASCADE,related_name="copies")
     copy_number = models.PositiveIntegerField()
-    status = models.CharField(max_length = 10,choices=STATUS_CHOICES,default = "Available")
+    status = models.CharField(max_length = 10,choices=STATUS_CHOICES,default = "AVAILABLE")
     location = models.CharField(max_length=100,blank = True,null= True)
 
     class Meta:
