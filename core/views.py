@@ -163,3 +163,18 @@ def add_book_copy(request,book_id):
     book.save()
 
     return redirect('core:book_copies',book_id = book.id)
+
+@user_passes_test(is_admin)
+def delete_book_copy(request,copy_id):
+    copy= get_object_or_404(BookCopy,id= copy_id)
+    book = copy.book
+
+    if copy.status != 'AVAILABLE':
+        messages.error(request,f"Cannot delete a copy with status '{copy.get_status_display()}'.")
+    else :
+        copy.delete()
+        book.total_copies -=1
+        book.available_copies -=1
+        book.save()
+
+    return redirect('core:book_copies',book_id = book.id)

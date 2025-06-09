@@ -15,5 +15,6 @@ urlpatterns = [
     path('admin/books/<int:book_id>/edit/',views.edit_book,name="edit_book"),
     path('admin/books/<int:book_id>/delete/',views.delete_book,name = 'delete_book'),
     path('admin/books/<int:book_id>/copies',views.book_copies,name = 'book_copies'),
-    path('admin/books/<int:book_id>/copies/add/',views.add_book_copy,name = 'add_book_copy')
+    path('admin/books/<int:book_id>/copies/add/',views.add_book_copy,name = 'add_book_copy'),
+    path('admin/books/<int:copy_id>/delete/',views.delete_book_copy,name = "delete_book_copy"),
 ]
