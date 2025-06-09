@@ -2,7 +2,6 @@ from django.urls import path
 
 # from library_management.urls import urlpatterns
 from . import views
-
 app_name = "core"
 urlpatterns = [
     path("borrow/<int:copy_id>/",views.borrow_book_view,name = "borrow_book"),
@@ -11,4 +10,5 @@ urlpatterns = [
     path("dashboard/",views.user_dashboard_view,name = "user_dashboard"),
     path("",views.book_list_view,name = "book_list"),
     path("book/<int:book_id>/",views.book_detail_view,name = "book_detail"),
+    path('admin/books/',views.admin_book_list, name ='admin_book_list'),
 ]

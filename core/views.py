@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import BookCopy ,Book, Reservation, BorrowTransaction
 from .services import borrow_book, return_book
 from  django.utils import timezone
@@ -103,3 +103,14 @@ def book_detail_view (request,book_id):
         "total_copies":total_copies
     }
     return render(request,"core/book_detail.html",context)
+
+# For the admin panel admin views
+
+def is_admin(user):
+    return user.is_authenticated and user.role == 'ADMIN'
+
+
+@user_passes_test(is_admin)
+def admin_book_list(request):
+    books = Book.objects.all().prefetch_related('copies')
+    return render(request, 'core/admin/book_list.html', {'books': books})
