@@ -82,7 +82,8 @@ def book_list_view(request):
         books = books.filter(
             Q(title__icontains =query) |
             Q(author__icontains = query)|
-            Q(category__icontains = query)
+            Q(genre__icontains = query)|
+            Q(language__icontains =query)
         )
     context = {
         'books':books,
