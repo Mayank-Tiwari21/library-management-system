@@ -1,4 +1,4 @@
-{% extends base.html %}
+{% extends 'base.html' %}
 {% block content %}
 <h2>Welcome, {{ request.user.username }}</h2>
 
@@ -7,10 +7,10 @@
     {% for txn in active_borrows %}
     <li>
         {{ txn.book_copy.book.title }} - due:{{ txn.due_date }}
-        {%if txn.due_date <= today %}
+        {%if txn.is_overdue %}
             <strong style="color:red; ">Overdue</strong>
         {%endif%}
-        {% if txn.fine_amount >0 %}
+        {% if txn.has_fine %}
         | Fine: Rs.{{ txn.fine_amount }}
         {% endif %}
     </li>
@@ -21,13 +21,13 @@
 
 <h3>Your Reservations</h3>
 <ul>
-    {% for res in reservations%}
+    {% for res in reservations %}
     <li>
         {{ res.book.title }} - {{ res.status }}
-        {% if res.status== "ACTIVE" %}
+        {% if res.status == 'ACTIVE' %}
             (Placed on {{ res.reserved_at }})
         {% elif res.status == "FULFILLED" %}
-            (Fulfilled on {{ res.updated_at|default: res.reserved_at }})
+            (Fulfilled on {{ res.updated_at }})
         {% endif %}
     </li>
     {% empty %}

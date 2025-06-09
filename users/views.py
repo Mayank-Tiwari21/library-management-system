@@ -14,6 +14,9 @@ def register_view(request):
             login(request, user)
             messages.success(request,"Account created sccessfully.")
             return redirect('core:user_dashboard')
+        else:
+            # ✅ Return form with errors if not valid
+            return render(request, "users/register.html", {'form': form})
     else:
         form = CustomUserCreationForm()
         return render(request,"users/register.html",{'form':form })

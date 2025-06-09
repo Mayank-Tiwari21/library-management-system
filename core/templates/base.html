@@ -19,20 +19,20 @@
                         </span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                        <a class="nav-link" href="{% url 'core:user_dashboard' %}">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <form method="post" action="{% url 'logout' %}">
+                        <form method="post" action="{% url 'users:logout' %}">
                             {% csrf_token %}
                             <button class="btn btn-link nav-link" type="submit">Logout</button>
                         </form>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        <a class="nav-link" href="{% url 'users:login' %}">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        <a class="nav-link" href="{% url 'users:register' %}">Register</a>
                     </li>
                 {% endif %}
             </ul>

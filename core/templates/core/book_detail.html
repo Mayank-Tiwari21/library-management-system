@@ -10,7 +10,7 @@
 
 {% if user.is_authenticated %}
   <h3>Copies</h3>
-  {% for copy in book.bookcopy_set.all %}
+  {% for copy in copies %}
     <p>Copy ID: {{ copy.id }} | Status: {{ copy.status }}</p>
     {% if copy.status == "AVAILABLE" %}
       <form method="post" action="{% url 'core:borrow_book' copy.id %}">

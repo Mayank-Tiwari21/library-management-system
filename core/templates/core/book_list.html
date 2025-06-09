@@ -13,7 +13,7 @@
     <li>
       <strong>{{ book.title }}</strong> by {{ book.author }}
       ({{ book.category }})<br>
-      <a href="{% url 'book_detail' book.id %}">View Details</a>
+      <a href="{% url 'core:book_detail' book.id %}">View Details</a>
     </li>
   {% empty %}
     <li>No books found.</li>

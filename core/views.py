@@ -62,6 +62,9 @@ def user_dashboard_view(request):
         user = request.user
     ).select_related("book")
     today = timezone.now().date()
+    for txn in active_borrows:
+        txn.is_overdue = txn.due_date and txn.due_date< timezone.now().date()
+        txn.has_fine = txn.fine_amount and txn.fine_amount > 0
     context = {
         'active_borrows':active_borrows,
         'reservations':reservations,
@@ -88,7 +91,7 @@ def book_list_view(request):
 
 def book_detail_view (request,book_id):
     book = get_object_or_404(Book,id = book_id)
-    copies = book.book_copy__set.all()
+    copies = book.copies.all()
 
     available_copies = copies.filter(status = "AVAILABLE").count()
     total_copies = copies.count()

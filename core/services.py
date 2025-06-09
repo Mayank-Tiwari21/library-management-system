@@ -18,7 +18,7 @@ def borrow_book(user, book_copy):
     active_borrows = BorrowTransaction.objects.filter(user = user, returned_at__isnull = True).count()
     if active_borrows >= BORROW_LIMIT:
         raise Exception("Borrowing Limit exceeded")
-    overdue_books = BorrowTransaction(user = user, due_date__lt = timezone.now().date(),returned_at_isNull= True)
+    overdue_books = BorrowTransaction.objects.filter(user = user, due_date__lt = timezone.now().date(),returned_at__isnull= True)
     if overdue_books.exists():
         raise Exception("You have overdue books. Return them before borrowing")
     # updating teh book_copy status
@@ -32,11 +32,12 @@ def borrow_book(user, book_copy):
     #setting the due date
     due_date = timezone.now().date() + timedelta(days = BORROW_DURATION_DAYS)
 
-    BorrowTransaction(
+    BorrowTransaction.objects.create(
         user = user,
         book_copy = book_copy,
         due_date = due_date
     )
+
 
 def return_book(book_copy):
     try:
@@ -49,18 +50,20 @@ def return_book(book_copy):
 
     #fine calculation
     today = timezone.now().date()
-    if today > transaction.due.date:
+    if today > transaction.due_date:
         overdue_days = (today- transaction.due_date).days
         transaction.fine_amount = overdue_days*FINE_PER_DAY
 
     transaction.save()
-
+    #update book copy
+    book_copy.status = 'AVAILABLE'
+    book_copy.save()
     #update the available copies
     book_copy.book.available_copies +=1
     book_copy.book.save()
 
     #fullfilll earliest active reservation (if any)
-    reservation = Reservation(book = book_copy.book, status = "ACTIVE").order_by("reserved_at").first()
+    reservation = Reservation.objects.filter(book = book_copy.book, status = "ACTIVE").order_by("reserved_at").first()
     if reservation:
         try:
             borrow_book(reservation.user,book_copy)

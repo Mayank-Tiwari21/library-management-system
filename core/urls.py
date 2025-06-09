@@ -10,5 +10,5 @@ urlpatterns = [
     path("reserve/<int:book_id>/",views.reserve_book_view,name = "reserve_book"),
     path("dashboard/",views.user_dashboard_view,name = "user_dashboard"),
     path("",views.book_list_view,name = "book_list"),
-    path("book/<int:book_id/>",views.book_detail_view,name = "book_detail"),
+    path("book/<int:book_id>/",views.book_detail_view,name = "book_detail"),
 ]
