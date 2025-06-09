@@ -6,6 +6,9 @@ from .services import borrow_book, return_book
 from  django.utils import timezone
 from django.db.models import Q
 from .forms import BookForm
+
+#importing decorators self created
+from .decorators import admin_required
 # Create your views here.
 
 @login_required
@@ -179,3 +182,21 @@ def delete_book_copy(request,copy_id):
         book.save()
 
     return redirect('core:book_copies',book_id = book.id)
+
+# for overdue report on accessible on the admin side..
+@admin_required
+def admin_overdue_report(request):
+    today = timezone.now().date()
+    overdue_txns = BorrowTransaction.objects.filter(
+        returned_at__isnull = True,
+        due_date__lt = today
+    ).select_related('user','book_copy','book_copy__book')
+
+    for txn in overdue_txns:
+        overdue_days = (today - txn.due_date).days
+        txn.fine_amount = overdue_days * 5.0
+    context = {
+        'overdue_transactions':overdue_txns,
+        'today':today
+    }
+    return render(request,'core/admin/admin_overdue_report.html', context)

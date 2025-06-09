@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Overdue Books Report</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Book</th>
+            <th>Due Date</th>
+            <th>Days Overdue</th>
+            <th>Fine (Rs.)</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for txn in overdue_txns %}
+    <tr>
+        <td>{{ txn.user.username }}</td>
+        <td>{{ txn.book_copy.book.title }}</td>
+        <td>{{ txn.due_date }}</td>
+        <td>{{ today|date:"Y-m-d" | date:"U"|add:"0" |date:"Y-m-d"}} - {{ txn.due_date }} = {{ txn.due_date|timesince:today }} ago</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan = "5">No Overdue Books.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
