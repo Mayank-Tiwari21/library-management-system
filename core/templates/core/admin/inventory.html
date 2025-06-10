@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Library Inventory</h2>
+
+{% for book in books %}
+<div style="border:1px solid #ccc;padding:10px; margin-bottom:15px">
+    <h3>{{ book.title }} by {{ book.author }}</h3>
+    <p><strong>ISBN:</strong>{{ book.isbn }}</p>
+    <p><strong>Total Copies:</strong>{{ book.total_copies }}</p>
+    <p><strong>Available Copies:</strong>{{ book.available_copies }}</p>
+
+    <h4>Copies:</h4>
+    <ul>
+        {% for copy in book.copies.all %}
+        <li>Copy {{ copy.copy_number }} - {{ copy.status }}{% if copy.location %} ({{ copy.location }}){% endif %}</li>
+        {% empty %}
+        <li>No copies available.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% empty %}
+<p>No books in the inventory.</p>
+{% endfor %}
+
+{% endblock %}

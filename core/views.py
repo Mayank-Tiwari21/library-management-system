@@ -200,3 +200,11 @@ def admin_overdue_report(request):
         'today':today
     }
     return render(request,'core/admin/admin_overdue_report.html', context)
+
+#for inventory view.
+@admin_required
+def inventory_view(request):
+    books = Book.objects.prefetch("copies").all()
+    context = {'books':books,
+               }
+    return render(request,"core/admin/inventory.html",context)
