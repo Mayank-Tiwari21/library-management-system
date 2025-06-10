@@ -1,16 +1,42 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Copies of {{ book.title }}</h2>
+<div class="container my-4">
+  <h2 class="mb-4">Copies of "{{ book.title }}"</h2>
 
-<ul>
+  {% if copies %}
+  <ul class="list-group mb-3">
     {% for copy in copies %}
-    <li>Copy #{{ copy.copy_number }} - {{ copy.status }}
-        <a href="{% url 'core:delete_book_copy' copy.id %}">Delete</a>
-    </li>
-    {% empty %}
-    <li>No copies found.</li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>Copy #{{ copy.copy_number }} - <strong>{{ copy.status|title }}</strong></span>
+        <a href="{% url 'core:delete_book_copy' copy.id %}" class="btn btn-sm btn-danger">Delete</a>
+      </li>
     {% endfor %}
-</ul>
+  </ul>
+  {% else %}
+    <div class="alert alert-info">No copies found.</div>
+  {% endif %}
 
-<a href="{% url 'core:add_book_copy' book.id%}">Add New Copy</a>
+  <a href="{% url 'core:add_book_copy' book.id %}" class="btn btn-primary">Add New Copy</a>
+</div>
 {% endblock %}
+
+
+
+{% comment %}
+<!--{% extends 'base.html' %}-->
+<!--{% block content %}-->
+<!--<h2>Copies of {{ book.title }}</h2>-->
+
+<!--<ul>-->
+<!--    {% for copy in copies %}-->
+<!--    <li>Copy #{{ copy.copy_number }} - {{ copy.status }}-->
+<!--        <a href="{% url 'core:delete_book_copy' copy.id %}">Delete</a>-->
+<!--    </li>-->
+<!--    {% empty %}-->
+<!--    <li>No copies found.</li>-->
+<!--    {% endfor %}-->
+<!--</ul>-->
+
+<!--<a href="{% url 'core:add_book_copy' book.id%}">Add New Copy</a>-->
+<!--{% endblock %}-->
+{% endcomment %}

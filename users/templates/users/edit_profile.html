@@ -1,12 +1,48 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h2>Edit Profile</h2>
+<div class="container my-5">
+  <h2 class="mb-4">Edit Profile</h2>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Changes</button>
-</form>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+              <div class="text-danger small">
+                {{ field.errors|striptags }}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
 
-<p><a href="{% url 'users:profile' %}">Cancel</a></p>
+        <div class="d-flex justify-content-between">
+          <a href="{% url 'users:profile' %}" class="btn btn-secondary">Cancel</a>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}
+
+
+
+{% comment %}
+<!--{% extends "base.html" %}-->
+<!--{% block content %}-->
+<!--<h2>Edit Profile</h2>-->
+
+<!--<form method="post">-->
+<!--    {% csrf_token %}-->
+<!--    {{ form.as_p }}-->
+<!--    <button type="submit">Save Changes</button>-->
+<!--</form>-->
+
+<!--<p><a href="{% url 'users:profile' %}">Cancel</a></p>-->
+<!--{% endblock %}-->
+{% endcomment %}

@@ -1,37 +1,94 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<h2>Welcome, {{ request.user.username }}</h2>
+<div class="container my-4">
+  <h2 class="mb-4">Welcome, {{ request.user.username }}</h2>
 
-<h3>Currently Borrowed Books</h3>
-<ul>
-    {% for txn in active_borrows %}
-    <li>
-        {{ txn.book_copy.book.title }} - due:{{ txn.due_date }}
-        {%if txn.is_overdue %}
-            <strong style="color:red; ">Overdue</strong>
-        {%endif%}
-        {% if txn.has_fine %}
-        | Fine: Rs.{{ txn.fine_amount }}
-        {% endif %}
-    </li>
-    {% empty %}
-    <li>No Borrowed Books.</li>
-    {% endfor %}
-</ul>
+  <div class="mb-5">
+    <h3>Currently Borrowed Books</h3>
+    {% if active_borrows %}
+      <ul class="list-group">
+        {% for txn in active_borrows %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ txn.book_copy.book.title }}</strong> <br>
+            <small class="text-muted">Due: {{ txn.due_date }}</small>
+            {% if txn.is_overdue %}
+              <span class="badge bg-danger ms-2">Overdue</span>
+            {% endif %}
+            {% if txn.has_fine %}
+              <span class="ms-2 text-danger">| Fine: ₹{{ txn.fine_amount }}</span>
+            {% endif %}
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="alert alert-info mt-3">No Borrowed Books.</div>
+    {% endif %}
+  </div>
 
-<h3>Your Reservations</h3>
-<ul>
-    {% for res in reservations %}
-    <li>
-        {{ res.book.title }} - {{ res.status }}
-        {% if res.status == 'ACTIVE' %}
-            (Placed on {{ res.reserved_at }})
-        {% elif res.status == "FULFILLED" %}
-            (Fulfilled on {{ res.updated_at }})
-        {% endif %}
-    </li>
-    {% empty %}
-    <li>No Reservations.</li>
-    {% endfor %}
-</ul>
+  <div>
+    <h3>Your Reservations</h3>
+    {% if reservations %}
+      <ul class="list-group">
+        {% for res in reservations %}
+        <li class="list-group-item">
+          <strong>{{ res.book.title }}</strong> -
+          <span class="badge bg-secondary">{{ res.status }}</span>
+          {% if res.status == 'ACTIVE' %}
+            <small class="text-muted ms-2">(Placed on {{ res.reserved_at|date:"d M Y" }})</small>
+          {% elif res.status == 'FULFILLED' %}
+            <small class="text-muted ms-2">(Fulfilled on {{ res.updated_at|date:"d M Y" }})</small>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="alert alert-info mt-3">No Reservations.</div>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}
+
+
+
+{% comment %}
+<!--{% extends 'base.html' %}-->
+<!--{% block content %}-->
+<!--<h2>Welcome, {{ request.user.username }}</h2>-->
+
+<!--<h3>Currently Borrowed Books</h3>-->
+<!--<ul>-->
+<!--    {% for txn in active_borrows %}-->
+<!--    <li>-->
+<!--        {{ txn.book_copy.book.title }} - due:{{ txn.due_date }}-->
+<!--        {%if txn.is_overdue %}-->
+<!--            <strong style="color:red; ">Overdue</strong>-->
+<!--        {%endif%}-->
+<!--        {% if txn.has_fine %}-->
+<!--        | Fine: Rs.{{ txn.fine_amount }}-->
+<!--        {% endif %}-->
+<!--    </li>-->
+<!--    {% empty %}-->
+<!--    <li>No Borrowed Books.</li>-->
+<!--    {% endfor %}-->
+<!--</ul>-->
+
+<!--<h3>Your Reservations</h3>-->
+<!--<ul>-->
+<!--    {% for res in reservations %}-->
+<!--    <li>-->
+<!--        {{ res.book.title }} - {{ res.status }}-->
+<!--        {% if res.status == 'ACTIVE' %}-->
+<!--            (Placed on {{ res.reserved_at }})-->
+<!--        {% elif res.status == "FULFILLED" %}-->
+<!--            (Fulfilled on {{ res.updated_at }})-->
+<!--        {% endif %}-->
+<!--    </li>-->
+<!--    {% empty %}-->
+<!--    <li>No Reservations.</li>-->
+<!--    {% endfor %}-->
+<!--</ul>-->
+<!--{% endblock %}-->
+{% endcomment %}

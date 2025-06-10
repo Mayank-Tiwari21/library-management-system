@@ -195,6 +195,8 @@ def admin_overdue_report(request):
     for txn in overdue_txns:
         overdue_days = (today - txn.due_date).days
         txn.fine_amount = overdue_days * 5.0
+        # added so as to allow the accessibility of the overdue days in the template rendering
+        txn.overdue_days  =overdue_days
     context = {
         'overdue_transactions':overdue_txns,
         'today':today

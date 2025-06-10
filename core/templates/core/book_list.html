@@ -1,22 +1,61 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Library Catalog</h2>
+<div class="container my-4">
+  <h2 class="mb-4">Library Catalog</h2>
 
-<form method="get">
-  <input type="text" name="q" placeholder="Search books..." value="{{ query }}">
-  <button type="submit">Search</button>
-</form>
+  <form method="get" class="input-group mb-4" role="search" aria-label="Search books">
+    <input
+      type="text"
+      name="q"
+      class="form-control"
+      placeholder="Search books..."
+      value="{{ query|default:'' }}"
+      aria-label="Search books"
+    />
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
 
-<ul>
-  {% for book in books %}
-    <li>
-      <strong>{{ book.title }}</strong> by {{ book.author }}
-      ({{ book.category }})<br>
-      <a href="{% url 'core:book_detail' book.id %}">View Details</a>
+  {% if books %}
+  <ul class="list-group">
+    {% for book in books %}
+    <li class="list-group-item">
+      <h5 class="mb-1">{{ book.title }}</h5>
+      <p class="mb-1">
+        <small>by {{ book.author }} | <em>{{ book.category }}</em></small>
+      </p>
+      <a href="{% url 'core:book_detail' book.id %}" class="btn btn-sm btn-outline-secondary">View Details</a>
     </li>
-  {% empty %}
-    <li>No books found.</li>
-  {% endfor %}
-</ul>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="alert alert-info">No books found.</div>
+  {% endif %}
+</div>
 {% endblock %}
+
+
+{% comment %}
+<!--{% extends 'base.html' %}-->
+
+<!--{% block content %}-->
+<!--<h2>Library Catalog</h2>-->
+
+<!--<form method="get">-->
+<!--  <input type="text" name="q" placeholder="Search books..." value="{{ query }}">-->
+<!--  <button type="submit">Search</button>-->
+<!--</form>-->
+
+<!--<ul>-->
+<!--  {% for book in books %}-->
+<!--    <li>-->
+<!--      <strong>{{ book.title }}</strong> by {{ book.author }}-->
+<!--      ({{ book.category }})<br>-->
+<!--      <a href="{% url 'core:book_detail' book.id %}">View Details</a>-->
+<!--    </li>-->
+<!--  {% empty %}-->
+<!--    <li>No books found.</li>-->
+<!--  {% endfor %}-->
+<!--</ul>-->
+<!--{% endblock %}-->
+{% endcomment %}

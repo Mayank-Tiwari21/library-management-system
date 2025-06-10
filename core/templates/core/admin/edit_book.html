@@ -1,10 +1,28 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<h2>Edit Book:{{ book.title }}</h2>
-<form method="POST">
+<div class="container my-4">
+  <h2 class="mb-4">Edit Book: <strong>{{ book.title }}</strong></h2>
+  <form method="POST" class="needs-validation" novalidate>
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Save Changes</button>
-</form>
-<a href="{% url 'core:admin_book_list' %}"></a>
+    <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+    <a href="{% url 'core:admin_book_list' %}" class="btn btn-secondary mt-3 ms-2">Back to Book List</a>
+  </form>
+</div>
 {% endblock %}
+
+
+
+{% comment %}
+<!--{% extends 'base.html' %}-->
+<!--{% block content %}-->
+<!--<h2>Edit Book:{{ book.title }}</h2>-->
+<!--<form method="POST">-->
+<!--    {% csrf_token %}-->
+<!--    {{ form.as_p }}-->
+<!--    <button type="submit">Save Changes</button>-->
+<!--</form>-->
+<!--<a href="{% url 'core:admin_book_list' %}"></a>-->
+<!--{% endblock %}-->
+{% endcomment %}

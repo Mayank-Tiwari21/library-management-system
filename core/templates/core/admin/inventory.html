@@ -1,25 +1,82 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Library Inventory</h2>
+<div class="container my-4">
+  <h2 class="mb-4">Library Inventory</h2>
 
-{% for book in books %}
-<div style="border:1px solid #ccc;padding:10px; margin-bottom:15px">
-    <h3>{{ book.title }} by {{ book.author }}</h3>
-    <p><strong>ISBN:</strong>{{ book.isbn }}</p>
-    <p><strong>Total Copies:</strong>{{ book.total_copies }}</p>
-    <p><strong>Available Copies:</strong>{{ book.available_copies }}</p>
+  <div class="mb-3">
+    <a href="{% url 'core:admin_book_list' %}" class="btn btn-primary me-2">Book List</a>
+    <a href="{% url 'core:add_book' %}" class="btn btn-success">Add New Book</a>
+  </div>
 
-    <h4>Copies:</h4>
-    <ul>
-        {% for copy in book.copies.all %}
-        <li>Copy {{ copy.copy_number }} - {{ copy.status }}{% if copy.location %} ({{ copy.location }}){% endif %}</li>
-        {% empty %}
-        <li>No copies available.</li>
-        {% endfor %}
-    </ul>
+  {% for book in books %}
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
+      <h3 class="card-title">{{ book.title }} <small class="text-muted">by {{ book.author }}</small></h3>
+      <p class="mb-1"><strong>ISBN:</strong> {{ book.isbn }}</p>
+      <p class="mb-1"><strong>Total Copies:</strong> {{ book.total_copies }}</p>
+      <p class="mb-3"><strong>Available Copies:</strong> {{ book.available_copies }}</p>
+
+      <div class="mb-3">
+        <a href="{% url 'core:book_copies' book.id %}" class="btn btn-sm btn-outline-success">
+          + Add Copy
+        </a>
+      </div>
+
+      <h5>Copies:</h5>
+      <ul class="list-group list-group-flush">
+          {% for copy in book.copies.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>Copy {{ copy.copy_number }} - {{ copy.status }}</span>
+              <div>
+                {% if copy.location %}
+                  <small class="text-muted me-3">({{ copy.location }})</small>
+                {% endif %}
+                <a href="{% url 'core:delete_book_copy' copy.id %}"
+                   class="btn btn-sm btn-danger"
+                   onclick="return confirm('Are you sure you want to delete this copy?');">
+                   Delete
+                </a>
+              </div>
+            </li>
+          {% empty %}
+            <li class="list-group-item text-muted">No copies available.</li>
+          {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% empty %}
+    <p class="text-muted">No books in the inventory.</p>
+  {% endfor %}
 </div>
-{% empty %}
-<p>No books in the inventory.</p>
-{% endfor %}
-
 {% endblock %}
+
+
+
+
+{% comment %}
+<!--{% extends 'base.html' %}-->
+<!--{% block content %}-->
+<!--<h2>Library Inventory</h2>-->
+
+<!--{% for book in books %}-->
+<!--<div style="border:1px solid #ccc;padding:10px; margin-bottom:15px">-->
+<!--    <h3>{{ book.title }} by {{ book.author }}</h3>-->
+<!--    <p><strong>ISBN:</strong>{{ book.isbn }}</p>-->
+<!--    <p><strong>Total Copies:</strong>{{ book.total_copies }}</p>-->
+<!--    <p><strong>Available Copies:</strong>{{ book.available_copies }}</p>-->
+
+<!--    <h4>Copies:</h4>-->
+<!--    <ul>-->
+<!--        {% for copy in book.copies.all %}-->
+<!--        <li>Copy {{ copy.copy_number }} - {{ copy.status }}{% if copy.location %} ({{ copy.location }}){% endif %}</li>-->
+<!--        {% empty %}-->
+<!--        <li>No copies available.</li>-->
+<!--        {% endfor %}-->
+<!--    </ul>-->
+<!--</div>-->
+<!--{% empty %}-->
+<!--<p>No books in the inventory.</p>-->
+<!--{% endfor %}-->
+
+<!--{% endblock %}-->
+{% endcomment %}

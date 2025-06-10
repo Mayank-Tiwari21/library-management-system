@@ -1,43 +1,103 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>{{ book.title }}</h2>
-<p><strong>Author:</strong> {{ book.author }}</p>
-<p><strong>Category:</strong> {{ book.category }}</p>
-<p><strong>Description:</strong> {{ book.description }}</p>
+<div class="container my-4">
+  <h2 class="mb-3">{{ book.title }}</h2>
+  <p><strong>Author:</strong> {{ book.author }}</p>
+  <p><strong>Category:</strong> {{ book.category }}</p>
+  <p><strong>Description:</strong> {{ book.description }}</p>
 
-<p><strong>Available Copies:</strong> {{ available_copies }} / {{ total_copies }}</p>
+  <p><strong>Available Copies:</strong> {{ available_copies }} / {{ total_copies }}</p>
 
-{% if user.is_authenticated %}
-  <h3>Copies</h3>
-  {% for copy in copies %}
-    <p>Copy ID: {{ copy.id }} | Status: {{ copy.status }}</p>
-    {% if copy.status == "AVAILABLE" %}
-      <form method="post" action="{% url 'core:borrow_book' copy.id %}">
-        {% csrf_token %}
-        <button type="submit">Borrow this Copy</button>
-      </form>
-    {% elif copy.status == "BORROWED" %}
-      {% if copy.borrowtransaction_set.last.user == request.user %}
-        <form method="post" action="{% url 'core:return_book' copy.id %}">
-          {% csrf_token %}
-          <button type="submit">Return</button>
-        </form>
-      {% endif %}
-    {% endif %}
-  {% empty %}
-    <p>No copies found for this book.</p>
-  {% endfor %}
-
-  {% if available_copies == 0 %}
-    <form method="post" action="{% url 'core:reserve_book' book.id %}">
-      {% csrf_token %}
-      <button type="submit">Reserve this Book</button>
-    </form>
+  {% if user.is_authenticated %}
+  <h3 class="mt-4">Copies</h3>
+  {% if copies %}
+    <div class="list-group mb-3">
+      {% for copy in copies %}
+      <div class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <strong>Copy ID:</strong> {{ copy.id }} | <strong>Status:</strong> {{ copy.status }}
+        </div>
+        <div>
+          {% if copy.status == "AVAILABLE" %}
+          <form method="post" action="{% url 'core:borrow_book' copy.id %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-primary">Borrow this Copy</button>
+          </form>
+          {% elif copy.status == "BORROWED" %}
+            {% if copy.borrowtransaction_set.last.user == user %}
+            <form method="post" action="{% url 'core:return_book' copy.id %}" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-success">Return</button>
+            </form>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">No copies found for this book.</p>
   {% endif %}
 
-{% else %}
-  <p><a href="{% url 'login' %}">Log in</a> to borrow or reserve this book.</p>
-{% endif %}
+  {% if available_copies == 0 %}
+  <form method="post" action="{% url 'core:reserve_book' book.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-warning">Reserve this Book</button>
+  </form>
+  {% endif %}
 
+  {% else %}
+  <p>
+    <a href="{% url 'login' %}">Log in</a> to borrow or reserve this book.
+  </p>
+  {% endif %}
+</div>
 {% endblock %}
+
+
+{% comment %}
+<!--{% extends 'base.html' %}-->
+
+<!--{% block content %}-->
+<!--<h2>{{ book.title }}</h2>-->
+<!--<p><strong>Author:</strong> {{ book.author }}</p>-->
+<!--<p><strong>Category:</strong> {{ book.category }}</p>-->
+<!--<p><strong>Description:</strong> {{ book.description }}</p>-->
+
+<!--<p><strong>Available Copies:</strong> {{ available_copies }} / {{ total_copies }}</p>-->
+
+<!--{% if user.is_authenticated %}-->
+<!--  <h3>Copies</h3>-->
+<!--  {% for copy in copies %}-->
+<!--    <p>Copy ID: {{ copy.id }} | Status: {{ copy.status }}</p>-->
+<!--    {% if copy.status == "AVAILABLE" %}-->
+<!--      <form method="post" action="{% url 'core:borrow_book' copy.id %}">-->
+<!--        {% csrf_token %}-->
+<!--        <button type="submit">Borrow this Copy</button>-->
+<!--      </form>-->
+<!--    {% elif copy.status == "BORROWED" %}-->
+<!--      {% if copy.borrowtransaction_set.last.user == request.user %}-->
+<!--        <form method="post" action="{% url 'core:return_book' copy.id %}">-->
+<!--          {% csrf_token %}-->
+<!--          <button type="submit">Return</button>-->
+<!--        </form>-->
+<!--      {% endif %}-->
+<!--    {% endif %}-->
+<!--  {% empty %}-->
+<!--    <p>No copies found for this book.</p>-->
+<!--  {% endfor %}-->
+
+<!--  {% if available_copies == 0 %}-->
+<!--    <form method="post" action="{% url 'core:reserve_book' book.id %}">-->
+<!--      {% csrf_token %}-->
+<!--      <button type="submit">Reserve this Book</button>-->
+<!--    </form>-->
+<!--  {% endif %}-->
+
+<!--{% else %}-->
+<!--  <p><a href="{% url 'login' %}">Log in</a> to borrow or reserve this book.</p>-->
+<!--{% endif %}-->
+
+<!--{% endblock %}-->
+{% endcomment %}

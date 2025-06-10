@@ -1,10 +1,33 @@
+
 {% extends 'base.html' %}
+
 {% block content %}
-<h2>Add New Book</h2>
-<form method = 'POST'>
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type = 'submit'>Add Book</button>
-</form>
-<a href="{% url 'core:admin_book_list' %}">Back to Book list</a>
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">📚 Add New Book</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST" class="needs-validation" novalidate>
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success mt-2">➕ Add Book</button>
+                <a href="{% url 'core:admin_book_list' %}" class="btn btn-secondary mt-2 ms-2">⬅ Back to Book List</a>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
+
+{% comment %}
+<!--{% extends 'base.html' %}-->
+<!--{% block content %}-->
+<!--<h2>Add New Book</h2>-->
+<!--<form method = 'POST'>-->
+<!--    {% csrf_token %}-->
+<!--    {{ form.as_p }}-->
+<!--    <button type = 'submit'>Add Book</button>-->
+<!--</form>-->
+<!--<a href="{% url 'core:admin_book_list' %}">Back to Book list</a>-->
+<!--{% endblock %}-->
+{% endcomment %}
