@@ -204,7 +204,7 @@ def admin_overdue_report(request):
 #for inventory view.
 @admin_required
 def inventory_view(request):
-    books = Book.objects.prefetch("copies").all()
+    books = Book.objects.prefetch_related("copies").all()
     context = {'books':books,
                }
     return render(request,"core/admin/inventory.html",context)

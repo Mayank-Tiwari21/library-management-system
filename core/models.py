@@ -31,8 +31,8 @@ class Book(models.Model):
     genre = models.CharField(max_length=100,blank = True, null=True)
     language = models.CharField(max_length=50,blank = True,null = True)
     isbn = models.CharField(max_length=13,unique=True)
-    total_copies = models.PositiveIntegerField(default=1)
-    available_copies = models.PositiveIntegerField(default = 1)
+    total_copies = models.PositiveIntegerField(default=0)
+    available_copies = models.PositiveIntegerField(default = 0)
 
     def __str__(self):
         return f"{self.title} by {self.author}"
